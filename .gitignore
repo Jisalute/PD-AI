@@ -1,0 +1,10 @@
+.venv/
+venv/
+.idea/
+__pycache__/
+*.pyc
+.env
+uploads/
+pd_fastapi_starter.egg-info/
+logs/
+.vscode/
