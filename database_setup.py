@@ -378,7 +378,62 @@ TABLE_STATEMENTS = [
         INDEX idx_date_status (biz_date, status),
         INDEX idx_creator (creator)
     ) COMMENT='动态分配方案表';
-    """
+    """,# ========== AI图片真伪检测引擎相关表 ==========
+        # 图片检测记录表
+	"""
+	
+	CREATE TABLE IF NOT EXISTS pd_image_detection (
+    	id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    	image_url VARCHAR(255) NOT NULL COMMENT '图片存储路径或URL',
+    	image_md5 VARCHAR(32) NOT NULL COMMENT '图片MD5值，用于去重',
+    	upload_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上传时间',
+    	detection_status TINYINT DEFAULT 0 COMMENT '检测状态：0-待检测，1-检测中，2-已完成',
+    	net_weight_area TEXT COMMENT '净重区域坐标信息',
+    	detection_result TINYINT DEFAULT 0 COMMENT '检测结果：0-正常，1-可疑，2-篡改',
+    	confidence_score FLOAT DEFAULT 0 COMMENT '模型置信度',
+    	anomaly_type VARCHAR(50) COMMENT '异常类型',
+    	anomaly_area_image VARCHAR(255) COMMENT '异常区域截图路径',
+    	detection_time DATETIME COMMENT '检测完成时间',
+    	reviewer_id BIGINT COMMENT '复核人ID',
+    	review_status TINYINT DEFAULT 0 COMMENT '复核状态：0-未复核，1-已复核',
+    	review_time DATETIME COMMENT '复核时间',
+    	review_remark VARCHAR(255) COMMENT '复核备注',
+    	is_used_for_train TINYINT DEFAULT 0 COMMENT '是否已用于模型训练',
+    	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    	INDEX idx_md5 (image_md5),
+    	INDEX idx_status (detection_status),
+    	INDEX idx_result (detection_result),
+    	INDEX idx_review_status (review_status)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='图片检测记录表';
+	""",
+	# 人工抽查记录表
+	"""
+	CREATE TABLE IF NOT EXISTS pd_sample_check (
+    	id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    	check_time DATETIME NOT NULL COMMENT '抽查时间',
+    	checker_id BIGINT NOT NULL COMMENT '抽查人ID',
+    	detection_record_id BIGINT NOT NULL COMMENT '关联的检测记录ID',
+    	original_result TINYINT NOT NULL COMMENT '原始检测结果',
+    	check_result TINYINT NOT NULL COMMENT '抽查确认结果',
+    	is_match TINYINT DEFAULT 1 COMMENT '是否一致',
+    	remark VARCHAR(255) COMMENT '抽查备注',
+    	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    	INDEX idx_checker (checker_id),
+    	INDEX idx_detection (detection_record_id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='人工抽查记录表';
+	""",
+	# 检测日志表
+	"""
+	CREATE TABLE IF NOT EXISTS pd_detection_log (
+    	id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    	record_id BIGINT NOT NULL COMMENT '关联的检测记录ID',
+    	log_level VARCHAR(20) DEFAULT 'info' COMMENT '日志级别',
+    	log_content TEXT NOT NULL COMMENT '日志内容',
+    	create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    	INDEX idx_record (record_id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='检测日志表';
+	""",
 ]
 
 
