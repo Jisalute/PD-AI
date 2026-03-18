@@ -1,0 +1,6 @@
+2026-03-12 13:54:28,623 - ERROR - ❌ 检测结果目录不存在: detection_results
+2026-03-12 13:54:28,623 - INFO - 💡 请先运行检测系统生成结果到 detection_results 目录
+2026-03-12 14:34:36,855 - ERROR - ❌ 检测结果目录不存在: detection_results
+2026-03-12 14:34:36,855 - INFO - 💡 请先运行检测系统生成结果到 detection_results 目录
+2026-03-13 19:30:08,060 - INFO - 启动篡改检测系统准确度评估工具
+2026-03-13 19:30:08,060 - ERROR - 检测结果目录不存在: detection_results
